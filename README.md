@@ -185,3 +185,11 @@
 - 작업: 댓글 작성 테스트(t4: `POST /api/v1/posts/1/comments` → 201, `201-1`, data의 모든 필드, 댓글 번호가 1 이상, 1번 글의 댓글 3건 → 4건)
 - 이유: TDD (강의 56강도 댓글 작성을 테스트 먼저 작성). 응답의 댓글 번호가 실제 DB 번호여야 한다는 것까지 정함
 - 결과: **실패(빨강)**. 댓글 작성 실패(POST를 처리할 메서드 없음), 기존 12개 통과
+
+### 021 댓글 작성, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/021)
+- 강의: 14172 56강
+- 작업: PostService.writeComment·flush, `POST /api/v1/posts/{postId}/comments`(PostCommentWriteReqBody, @Valid) → `RsData<PostCommentDto>` `201-1`. 댓글 추가 직후 flush()로 INSERT를 앞당겨 DB 번호를 응답에 사용
+- 이유: 020 테스트 통과. flush 없이는 응답을 만들 때 아직 INSERT 전이라 번호 0이 나감 (어제 과제 006-03에서 실험으로 확인)
+- 결과: **통과(초록)**. 서버에서 "6번 댓글이 작성되었습니다."(201), 빈 내용 400 확인
