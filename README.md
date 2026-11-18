@@ -121,3 +121,11 @@
 - 작업: 글 수정 테스트(t6: `PUT /api/v1/posts/1` → 200, `200-1`, DB의 제목·내용이 바뀌었는지 확인)
 - 이유: TDD. 수정은 PUT 메서드, 응답은 데이터 없는 RsData, 실제 DB 반영까지 테스트로 먼저 정함
 - 결과: **실패(빨강)**. 수정 테스트 실패(PUT을 처리할 메서드 없음), 기존 7개 통과
+
+### 013 글 수정, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/013)
+- 강의: 14172 19·31강
+- 작업: `PUT /api/v1/posts/{id}`. PostModifyReqBody(@Valid)로 받고 post.modify로 값만 바꿈(더티 체킹으로 UPDATE), 응답은 `RsData<Void>` `200-1`
+- 이유: 012 테스트 통과
+- 결과: **통과(초록)**. 서버에서 1번 글 수정 후 조회 시 제목·내용이 바뀌고 modifyDate가 갱신됨

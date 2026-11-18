@@ -34,6 +34,11 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    // 글 수정: 값만 바꾸면 트랜잭션이 끝날 때 JPA가 변경을 감지해 UPDATE (더티 체킹)
+    public void modify(Post post, String title, String content) {
+        post.modify(title, content);
+    }
+
     // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
     public Optional<Post> findLatest() {
         return postRepository.findFirstByOrderByIdDesc();

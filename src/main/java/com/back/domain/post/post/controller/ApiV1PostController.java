@@ -74,4 +74,34 @@ public class ApiV1PostController {
                 new PostDto(post)
         );
     }
+
+    // 수정 요청 본문 (작성과 규칙은 같지만, 나중에 달라질 수 있어 따로 둔다, 강의 31강)
+    record PostModifyReqBody(
+            @NotBlank
+            @Size(min = 2, max = 100)
+            String title,
+            @NotBlank
+            @Size(min = 2, max = 5000)
+            String content
+    ) {
+    }
+
+    // 글 수정: PUT /api/v1/posts/{id} (강의 31강)
+    // 주소는 대상(몇 번 글), 행동(수정)은 HTTP 메서드(PUT)로 나타낸다
+    @PutMapping("/{id}")
+    @Transactional
+    public RsData<Void> modify(
+            @PathVariable int id,
+            @RequestBody @Valid PostModifyReqBody reqBody
+    ) {
+        Post post = postService.findById(id).get();
+
+        postService.modify(post, reqBody.title(), reqBody.content());
+
+        // 돌려줄 데이터가 없으므로 RsData<Void> (강의 19강)
+        return new RsData<>(
+                "200-1",
+                "%d번 글이 수정되었습니다.".formatted(id)
+        );
+    }
 }
