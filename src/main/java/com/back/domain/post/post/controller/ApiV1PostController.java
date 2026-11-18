@@ -104,4 +104,19 @@ public class ApiV1PostController {
                 "%d번 글이 수정되었습니다.".formatted(id)
         );
     }
+
+    // 글 삭제: DELETE /api/v1/posts/{id} (강의 16·21강)
+    // GET으로 삭제하면 브라우저 미리 불러오기나 검색엔진 방문만으로 지워질 수 있어, 삭제는 DELETE 메서드로
+    @DeleteMapping("/{id}")
+    @Transactional
+    public RsData<Void> delete(@PathVariable int id) {
+        Post post = postService.findById(id).get();
+
+        postService.delete(post);
+
+        return new RsData<>(
+                "200-1",
+                "%d번 글이 삭제되었습니다.".formatted(id)
+        );
+    }
 }

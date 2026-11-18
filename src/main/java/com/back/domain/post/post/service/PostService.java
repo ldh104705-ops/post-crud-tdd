@@ -39,6 +39,11 @@ public class PostService {
         post.modify(title, content);
     }
 
+    // 글 삭제. 댓글은 cascade REMOVE로 함께 삭제된다
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
+
     // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
     public Optional<Post> findLatest() {
         return postRepository.findFirstByOrderByIdDesc();
