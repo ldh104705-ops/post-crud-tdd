@@ -49,3 +49,11 @@
 - 작업: 공통 필드(id, createDate, modifyDate)를 가진 BaseEntity와 JPA Auditing, 글(Post)·댓글(PostComment) 엔티티와 1:N 연관관계(cascade PERSIST·REMOVE, orphanRemoval), 글·댓글의 수정/추가/찾기/삭제 메서드, PostRepository
 - 이유: 댓글은 글에 딸린 데이터라 글을 통해서만 추가·삭제하고(댓글 리포지터리 없음), 값은 Setter 대신 의미 있는 메서드(modify 등)로만 바꾸기 위함
 - 결과: 서버 실행 시 post, post_comment 테이블 생성 확인
+
+### 004 샘플 데이터 글 3개, 댓글 5개
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/004)
+- 강의: 14172 3강, 33강(테스트 프로파일·롤백)
+- 작업: PostService(count, write), BaseInitData(앱 시작 시 실행, 자기 자신 프록시 `self`로 @Transactional 적용, 데이터가 있으면 건너뜀), 샘플 데이터 생성 테스트(BaseInitDataTest)
+- 이유: 과제 요구사항(샘플 데이터 글 3개, 댓글 5개). 프로파일 제한이 없어 테스트 DB에도 같은 데이터가 생기므로, 이후 모든 테스트가 이 데이터를 기준으로 삼음
+- 결과: 개발 DB에 글 1~3, 댓글 1~5(1번 글에 1·2·3, 2번 글에 4·5) 생성. BaseInitDataTest 통과
