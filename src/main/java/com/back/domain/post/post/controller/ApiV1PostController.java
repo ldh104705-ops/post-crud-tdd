@@ -3,12 +3,13 @@ package com.back.domain.post.post.controller;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import com.back.global.rsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,5 +45,33 @@ public class ApiV1PostController {
         Post post = postService.findById(id).get();
 
         return new PostDto(post);
+    }
+
+    // 요청 본문(JSON)을 받을 객체. 이 컨트롤러에서만 쓰므로 안쪽에 둔다 (강의 22·24강)
+    record PostWriteReqBody(
+            // @NotBlank: null, "", "   " 모두 안 됨 / @Size: 글자 수 범위
+            @NotBlank
+            @Size(min = 2, max = 100)
+            String title,
+            @NotBlank
+            @Size(min = 2, max = 5000)
+            String content
+    ) {
+    }
+
+    // 글 작성: POST /api/v1/posts (강의 22강)
+    // @RequestBody: 요청 본문 JSON → PostWriteReqBody
+    // @Valid: 검증 실패 시 메서드가 실행되지 않고 MethodArgumentNotValidException → 400-1
+    @PostMapping
+    @Transactional
+    public RsData<PostDto> write(@RequestBody @Valid PostWriteReqBody reqBody) {
+        Post post = postService.write(reqBody.title(), reqBody.content());
+
+        // 201-1 → ResponseAspect가 HTTP 201로 설정
+        return new RsData<>(
+                "201-1",
+                "%d번 글이 작성되었습니다.".formatted(post.getId()),
+                new PostDto(post)
+        );
     }
 }
