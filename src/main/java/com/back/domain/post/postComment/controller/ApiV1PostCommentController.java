@@ -3,6 +3,7 @@ package com.back.domain.post.postComment.controller;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.domain.post.postComment.dto.PostCommentDto;
+import com.back.domain.post.postComment.entity.PostComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +32,20 @@ public class ApiV1PostCommentController {
                 .stream()
                 .map(PostCommentDto::new)
                 .toList();
+    }
+
+    // 댓글 단건조회: GET /api/v1/posts/{postId}/comments/{id} (강의 10강)
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    public PostCommentDto getItem(
+            @PathVariable int postId,
+            @PathVariable int id
+    ) {
+        Post post = postService.findById(postId).get();
+
+        // 그 글의 댓글 중에서만 찾는다 → 다른 글의 댓글 번호면 빈 Optional → .get()에서 예외 → 404-1
+        PostComment postComment = post.findCommentById(id).get();
+
+        return new PostCommentDto(postComment);
     }
 }
