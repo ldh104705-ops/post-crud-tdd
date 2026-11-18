@@ -1,0 +1,7 @@
+# 개발용 설정: 파일 DB (프로젝트 폴더의 db_dev.mv.db). 서버를 껐다 켜도 데이터가 남는다
+spring:
+  datasource:
+    url: jdbc:h2:./db_dev
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver

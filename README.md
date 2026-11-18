@@ -33,3 +33,11 @@
 - 작업: git 저장소 초기화(main 브랜치), .gitignore, .gitattributes, README 작성
 - 이유: 모든 작업을 작은 커밋과 태그로 기록해서, 나중에 커밋 하나씩 따라가며 이해하기 위함
 - 결과: 첫 커밋 생성, GitHub 공개 저장소에 업로드
+
+### 002 프로젝트 생성, 개발/테스트 DB 분리
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/002)
+- 강의: 14172 1강, 3강
+- 작업: Spring Boot 4.1.2 / Java 25 / Gradle Kotlin DSL 프로젝트 생성 (webmvc, Data JPA, Validation, H2, H2 콘솔, Lombok, DevTools), dev(파일 DB) / test(메모리 DB) 프로파일 분리
+- 이유: 개발 데이터는 재시작해도 남고, 테스트는 매번 깨끗한 메모리 DB에서 개발 데이터를 건드리지 않고 돌게 하기 위함
+- 결과: contextLoads 테스트 통과, 서버 실행 시 db_dev.mv.db 생성, localhost:8080은 404(아직 API 없음)

@@ -1,0 +1,33 @@
+# 공통 설정 (모든 프로파일에 적용)
+spring:
+  application:
+    name: back
+  profiles:
+    # 기본으로 dev 프로파일을 켠다 → application-dev.yaml도 함께 읽힘
+    active: dev
+  output:
+    ansi:
+      # 콘솔 로그에 색을 입힌다
+      enabled: always
+  datasource:
+    hikari:
+      # 트랜잭션 없이 DB가 바뀌는 일이 없도록 자동 커밋을 끈다
+      auto-commit: false
+  jpa:
+    # 실행되는 SQL을 로그로 보여준다
+    show-sql: true
+    hibernate:
+      # 엔티티 구조에 맞춰 테이블을 만들거나 고친다 (데이터는 유지)
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    # SQL에 들어가는 값(?)과 조회 결과 값을 로그로 보여준다
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    # 트랜잭션 시작/커밋/롤백을 로그로 보여준다
+    org.springframework.transaction.interceptor: TRACE
