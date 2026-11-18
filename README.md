@@ -57,3 +57,11 @@
 - 작업: PostService(count, write), BaseInitData(앱 시작 시 실행, 자기 자신 프록시 `self`로 @Transactional 적용, 데이터가 있으면 건너뜀), 샘플 데이터 생성 테스트(BaseInitDataTest)
 - 이유: 과제 요구사항(샘플 데이터 글 3개, 댓글 5개). 프로파일 제한이 없어 테스트 DB에도 같은 데이터가 생기므로, 이후 모든 테스트가 이 데이터를 기준으로 삼음
 - 결과: 개발 DB에 글 1~3, 댓글 1~5(1번 글에 1·2·3, 2번 글에 4·5) 생성. BaseInitDataTest 통과
+
+### 005 공통 응답 RsData, ResponseAspect, 전역 예외 처리
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/005)
+- 강의: 14172 13~19강(RsData), 27·28·31·37강(ResponseAspect), 48·50강(GlobalExceptionHandler)
+- 작업: 공통 응답 `RsData<T>`(resultCode, msg, data), resultCode 앞자리를 HTTP 응답코드로 바꿔 주는 ResponseAspect, 없는 데이터(404-1)와 검증 실패(400-1)를 RsData로 바꾸는 GlobalExceptionHandler
+- 이유: 이후 CRUD 기능이 모두 같은 응답 모양과 같은 실패 처리를 쓰도록 공통 기반을 먼저 마련. 변천 과정(PostDto 전용 RsData → 제네릭, ResponseEntity → AOP)은 어제 과제(post-api-plus)에서 단계별로 다뤘으므로 최종 형태로 가져옴
+- 결과: 컴파일과 기존 테스트 통과 (아직 이 기반을 쓰는 API는 없음)
