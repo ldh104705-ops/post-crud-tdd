@@ -109,4 +109,24 @@ public class ApiV1PostCommentController {
                 "%d번 댓글이 수정되었습니다.".formatted(id)
         );
     }
+
+    // 댓글 삭제: DELETE /api/v1/posts/{postId}/comments/{id} (강의 11·21강)
+    // @Transactional 필수: 목록에서 뺀 변화를 커밋 때 감지해서 orphanRemoval이 DELETE를 실행한다 (강의 11·12강)
+    @DeleteMapping("/{id}")
+    @Transactional
+    public RsData<Void> delete(
+            @PathVariable int postId,
+            @PathVariable int id
+    ) {
+        Post post = postService.findById(postId).get();
+
+        PostComment postComment = post.findCommentById(id).get();
+
+        postService.deleteComment(post, postComment);
+
+        return new RsData<>(
+                "200-1",
+                "%d번 댓글이 삭제되었습니다.".formatted(id)
+        );
+    }
 }

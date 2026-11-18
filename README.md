@@ -217,3 +217,11 @@
 - 작업: 댓글 삭제 테스트(t6: `DELETE /api/v1/posts/1/comments/1` → 200, `200-1`, 글의 댓글 목록과 DB에서 사라지고 댓글 5건 → 4건)
 - 이유: TDD. 응답뿐 아니라 orphanRemoval로 실제 DELETE가 실행되는지까지 테스트로 먼저 정함
 - 결과: **실패(빨강)**. 댓글 삭제 실패(DELETE를 처리할 메서드 없음), 기존 14개 통과
+
+### 025 댓글 삭제, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/025)
+- 강의: 14172 11·12·21강
+- 작업: PostService.deleteComment, `DELETE /api/v1/posts/{postId}/comments/{id}` → 글의 댓글 목록에서 빼면 orphanRemoval이 DELETE, 응답 `RsData<Void>` `200-1`
+- 이유: 024 테스트 통과. orphanRemoval은 커밋 때 변경을 감지하므로 @Transactional 필수
+- 결과: **통과(초록)**. 테스트 15개 모두 통과(글·댓글 CRUD 완료). 서버에서 1번 댓글 삭제 200, 다시 삭제하면 404

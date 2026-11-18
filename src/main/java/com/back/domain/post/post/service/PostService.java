@@ -55,6 +55,11 @@ public class PostService {
         postComment.modify(content);
     }
 
+    // 댓글 삭제: 글의 댓글 목록에서 뺀다 (DB 삭제는 orphanRemoval이 한다)
+    public boolean deleteComment(Post post, PostComment postComment) {
+        return post.deleteComment(postComment);
+    }
+
     // 지금까지 모아 둔 변경(INSERT 등)을 DB에 바로 보낸다. 커밋은 아니다 (강의 56강)
     public void flush() {
         postRepository.flush();
