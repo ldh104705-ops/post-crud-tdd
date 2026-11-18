@@ -41,3 +41,11 @@
 - 작업: Spring Boot 4.1.2 / Java 25 / Gradle Kotlin DSL 프로젝트 생성 (webmvc, Data JPA, Validation, H2, H2 콘솔, Lombok, DevTools), dev(파일 DB) / test(메모리 DB) 프로파일 분리
 - 이유: 개발 데이터는 재시작해도 남고, 테스트는 매번 깨끗한 메모리 DB에서 개발 데이터를 건드리지 않고 돌게 하기 위함
 - 결과: contextLoads 테스트 통과, 서버 실행 시 db_dev.mv.db 생성, localhost:8080은 404(아직 API 없음)
+
+### 003 엔티티 (BaseEntity, Post, PostComment)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/003)
+- 강의: 14172 3강, 12강, 16강, 31·32강
+- 작업: 공통 필드(id, createDate, modifyDate)를 가진 BaseEntity와 JPA Auditing, 글(Post)·댓글(PostComment) 엔티티와 1:N 연관관계(cascade PERSIST·REMOVE, orphanRemoval), 글·댓글의 수정/추가/찾기/삭제 메서드, PostRepository
+- 이유: 댓글은 글에 딸린 데이터라 글을 통해서만 추가·삭제하고(댓글 리포지터리 없음), 값은 Setter 대신 의미 있는 메서드(modify 등)로만 바꾸기 위함
+- 결과: 서버 실행 시 post, post_comment 테이블 생성 확인
