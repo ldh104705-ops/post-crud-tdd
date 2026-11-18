@@ -33,4 +33,9 @@ public class PostService {
     public Optional<Post> findById(int id) {
         return postRepository.findById(id);
     }
+
+    // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
+    public Optional<Post> findLatest() {
+        return postRepository.findFirstByOrderByIdDesc();
+    }
 }
