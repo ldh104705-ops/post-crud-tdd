@@ -145,3 +145,11 @@
 - 작업: PostService.delete, `DELETE /api/v1/posts/{id}` → `RsData<Void>` `200-1`
 - 이유: 014 테스트 통과. 댓글은 cascade REMOVE로 함께 삭제
 - 결과: **통과(초록)**. 글 CRUD 테스트 7개 모두 통과. 서버에서 1번 글 삭제 시 댓글 1·2·3도 삭제, 다시 삭제하면 404
+
+### 016 댓글 다건조회, 테스트 먼저 작성 (실패)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/016)
+- 강의: 14172 10강(댓글 주소), 54강(댓글 테스트)
+- 작업: ApiV1PostCommentControllerTest에 댓글 다건조회 테스트(t1: 1번 글의 댓글 3개, 각 댓글의 모든 필드). 컴파일되도록 기능 없는 ApiV1PostCommentController(`/api/v1/posts/{postId}/comments`)
+- 이유: TDD. 댓글은 글에 딸린 자원이라 주소도 글 아래에 두고, 응답은 댓글 배열이어야 한다는 것을 테스트로 먼저 정함
+- 결과: **실패(빨강)**. 댓글 다건조회 실패, 기존 9개 통과
