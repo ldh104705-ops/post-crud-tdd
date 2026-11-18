@@ -65,3 +65,11 @@
 - 작업: 공통 응답 `RsData<T>`(resultCode, msg, data), resultCode 앞자리를 HTTP 응답코드로 바꿔 주는 ResponseAspect, 없는 데이터(404-1)와 검증 실패(400-1)를 RsData로 바꾸는 GlobalExceptionHandler
 - 이유: 이후 CRUD 기능이 모두 같은 응답 모양과 같은 실패 처리를 쓰도록 공통 기반을 먼저 마련. 변천 과정(PostDto 전용 RsData → 제네릭, ResponseEntity → AOP)은 어제 과제(post-api-plus)에서 단계별로 다뤘으므로 최종 형태로 가져옴
 - 결과: 컴파일과 기존 테스트 통과 (아직 이 기반을 쓰는 API는 없음)
+
+### 006 글 다건조회, 테스트 먼저 작성 (실패)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/006)
+- 강의: 14172 33·35·45·47강
+- 작업: ApiV1PostControllerTest에 글 다건조회 테스트(t1). 컴파일되도록 기능 없는 ApiV1PostController와, 테스트가 DB 값과 비교할 때 쓸 PostService.findAll·findById 추가
+- 이유: TDD. "GET /api/v1/posts는 글 3개를 배열로, 각 글의 모든 필드를 담아 응답해야 한다"를 테스트로 먼저 정함
+- 결과: **실패(빨강)**. 요청을 처리할 컨트롤러 메서드가 아직 없음
