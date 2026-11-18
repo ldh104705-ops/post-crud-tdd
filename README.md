@@ -7,12 +7,71 @@
 
 ## 과제 요구사항
 
-- 프로젝트를 제로에서 시작
-- 샘플 데이터 글 3개, 댓글 5개
-- 글 CRUD 엔드포인트 구현 by TDD (다건조회, 단건조회)
-- 댓글 CRUD 엔드포인트 구현 by TDD (다건조회, 단건조회)
-- 커밋 메시지를 자세히 작성
-- 각 커밋마다 001, 002 같이 태그
+| 요구사항 | 결과 | 커밋 |
+|---|---|---|
+| 프로젝트를 제로에서 시작 | 빈 저장소에서 Spring Boot 4.1.2 프로젝트 생성, dev/test DB 분리 | 001~002 |
+| 샘플 데이터 글 3개, 댓글 5개 | `BaseInitData` + `BaseInitDataTest` | 004 |
+| 글 CRUD by TDD (다건조회, 단건조회) | 기능마다 테스트(실패) → 구현(통과) | 006~015 |
+| 댓글 CRUD by TDD (다건조회, 단건조회) | 기능마다 테스트(실패) → 구현(통과) | 016~025 |
+| 커밋 메시지를 자세히 작성 | 커밋마다 작업 내용 / 작업 이유 / 검증 | 전체 |
+| 각 커밋마다 001, 002 같이 태그 | 커밋 26개, 태그 `001`~`026` | 전체 |
+
+## TDD 진행 순서
+
+| 기능 | 테스트 먼저 (빨강) | 구현 (초록) |
+|---|---|---|
+| 글 다건조회 | [006](https://github.com/ldh104705-ops/post-crud-tdd/tree/006) | [007](https://github.com/ldh104705-ops/post-crud-tdd/tree/007) |
+| 글 단건조회 | [008](https://github.com/ldh104705-ops/post-crud-tdd/tree/008) | [009](https://github.com/ldh104705-ops/post-crud-tdd/tree/009) |
+| 글 작성 | [010](https://github.com/ldh104705-ops/post-crud-tdd/tree/010) | [011](https://github.com/ldh104705-ops/post-crud-tdd/tree/011) |
+| 글 수정 | [012](https://github.com/ldh104705-ops/post-crud-tdd/tree/012) | [013](https://github.com/ldh104705-ops/post-crud-tdd/tree/013) |
+| 글 삭제 | [014](https://github.com/ldh104705-ops/post-crud-tdd/tree/014) | [015](https://github.com/ldh104705-ops/post-crud-tdd/tree/015) |
+| 댓글 다건조회 | [016](https://github.com/ldh104705-ops/post-crud-tdd/tree/016) | [017](https://github.com/ldh104705-ops/post-crud-tdd/tree/017) |
+| 댓글 단건조회 | [018](https://github.com/ldh104705-ops/post-crud-tdd/tree/018) | [019](https://github.com/ldh104705-ops/post-crud-tdd/tree/019) |
+| 댓글 작성 | [020](https://github.com/ldh104705-ops/post-crud-tdd/tree/020) | [021](https://github.com/ldh104705-ops/post-crud-tdd/tree/021) |
+| 댓글 수정 | [022](https://github.com/ldh104705-ops/post-crud-tdd/tree/022) | [023](https://github.com/ldh104705-ops/post-crud-tdd/tree/023) |
+| 댓글 삭제 | [024](https://github.com/ldh104705-ops/post-crud-tdd/tree/024) | [025](https://github.com/ldh104705-ops/post-crud-tdd/tree/025) |
+
+## API
+
+| 기능 | 요청 | 성공 응답 | 실패 응답 |
+|---|---|---|---|
+| 글 다건조회 | `GET /api/v1/posts` | 200 글 배열 | — |
+| 글 단건조회 | `GET /api/v1/posts/{id}` | 200 글 | 404 `404-1` |
+| 글 작성 | `POST /api/v1/posts` `{"title","content"}` | 201 `201-1` + 작성된 글 | 400 `400-1` (제목 2~100자, 내용 2~5000자) |
+| 글 수정 | `PUT /api/v1/posts/{id}` `{"title","content"}` | 200 `200-1` | 400 `400-1`, 404 `404-1` |
+| 글 삭제 | `DELETE /api/v1/posts/{id}` | 200 `200-1` (댓글도 함께 삭제) | 404 `404-1` |
+| 댓글 다건조회 | `GET /api/v1/posts/{postId}/comments` | 200 댓글 배열 | 404 `404-1` (없는 글) |
+| 댓글 단건조회 | `GET /api/v1/posts/{postId}/comments/{id}` | 200 댓글 | 404 `404-1` (없는 글 또는 그 글의 댓글이 아님) |
+| 댓글 작성 | `POST /api/v1/posts/{postId}/comments` `{"content"}` | 201 `201-1` + 작성된 댓글 | 400 `400-1` (2~100자), 404 `404-1` |
+| 댓글 수정 | `PUT /api/v1/posts/{postId}/comments/{id}` `{"content"}` | 200 `200-1` | 400 `400-1`, 404 `404-1` |
+| 댓글 삭제 | `DELETE /api/v1/posts/{postId}/comments/{id}` | 200 `200-1` | 404 `404-1` |
+
+- 조회 성공은 데이터를 그대로, 그 외 응답과 모든 실패는 RsData(`resultCode`, `msg`, `data`)로 응답합니다.
+- `resultCode`는 `HTTP응답코드-세부코드` 형식이고, 앞자리가 실제 HTTP 응답코드가 됩니다 (`ResponseAspect`).
+
+## 실행과 테스트
+
+```bash
+./gradlew bootRun
+```
+
+```bash
+./gradlew test
+```
+
+- 서버를 켜면 샘플 데이터(글 3개, 댓글 5개)가 들어갑니다. 1번 글에 댓글 1·2·3, 2번 글에 댓글 4·5가 있습니다.
+- 개발 DB는 프로젝트 폴더의 `db_dev.mv.db`입니다. 지우고 다시 켜면 샘플 데이터 상태로 돌아갑니다.
+- 테스트는 메모리 DB를 쓰고 테스트마다 롤백되어, 항상 샘플 데이터 상태에서 시작합니다. 테스트는 15개입니다.
+
+## 프로젝트 구조
+
+```
+src/main/java/com/back
+├─ BackApplication.java
+├─ domain/post/post/        글: controller, dto, entity, repository, service
+├─ domain/post/postComment/ 댓글: controller, dto, entity (댓글은 글을 통해서만 다룸)
+└─ global/                  공통: aspect(ResponseAspect), globalExceptionHandler, initData, jpa(BaseEntity), rsData
+```
 
 ## 참고 자료
 
@@ -225,3 +284,10 @@
 - 작업: PostService.deleteComment, `DELETE /api/v1/posts/{postId}/comments/{id}` → 글의 댓글 목록에서 빼면 orphanRemoval이 DELETE, 응답 `RsData<Void>` `200-1`
 - 이유: 024 테스트 통과. orphanRemoval은 커밋 때 변경을 감지하므로 @Transactional 필수
 - 결과: **통과(초록)**. 테스트 15개 모두 통과(글·댓글 CRUD 완료). 서버에서 1번 댓글 삭제 200, 다시 삭제하면 404
+
+### 026 README 정리, 제출
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/026)
+- 작업: README에 요구사항별 결과표, TDD 진행 순서표(기능별 빨강/초록 커밋 링크), API 표, 실행·테스트 방법, 프로젝트 구조 정리
+- 이유: 과제 제출. 채점자가 요구사항과 TDD 순서를 커밋 링크로 바로 확인할 수 있게 하기 위함
+- 결과: 테스트 15개 통과. 새 DB로 서버를 켜고 10개 API(글·댓글 각각 다건조회, 단건조회, 작성, 수정, 삭제)를 차례로 호출해 모두 의도대로 동작 확인
