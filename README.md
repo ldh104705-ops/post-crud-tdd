@@ -73,3 +73,11 @@
 - 작업: ApiV1PostControllerTest에 글 다건조회 테스트(t1). 컴파일되도록 기능 없는 ApiV1PostController와, 테스트가 DB 값과 비교할 때 쓸 PostService.findAll·findById 추가
 - 이유: TDD. "GET /api/v1/posts는 글 3개를 배열로, 각 글의 모든 필드를 담아 응답해야 한다"를 테스트로 먼저 정함
 - 결과: **실패(빨강)**. 요청을 처리할 컨트롤러 메서드가 아직 없음
+
+### 007 글 다건조회, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/007)
+- 강의: 14172 4·8·9·11강
+- 작업: 응답용 PostDto(record), `GET /api/v1/posts` → 모든 글을 PostDto 목록으로 응답(@Transactional(readOnly = true))
+- 이유: 006 테스트 통과. 엔티티를 그대로 내보내면 글↔댓글 순환참조와 API 모양이 엔티티에 묶이는 문제가 있어 DTO 사용
+- 결과: **통과(초록)**. 서버에서 글 3개 배열 응답 확인
