@@ -3,6 +3,7 @@ package com.back.domain.post.postComment.controller;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.domain.post.postComment.entity.PostComment;
+import jakarta.persistence.EntityManager;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,6 +36,9 @@ public class ApiV1PostCommentControllerTest {
     private MockMvc mvc;
     @Autowired
     private PostService postService;
+    // 댓글 리포지터리가 없어서 댓글 수를 셀 때 사용
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("댓글 다건조회")
@@ -178,5 +183,36 @@ public class ApiV1PostCommentControllerTest {
         // DB의 댓글이 실제로 바뀌었는지
         Post post = postService.findById(postId).get();
         assertThat(post.findCommentById(id).get().getContent()).isEqualTo("내용 new");
+    }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    void t6() throws Exception {
+        int postId = 1;
+        int id = 1;
+
+        ResultActions resultActions = mvc
+                .perform(
+                        delete("/api/v1/posts/%d/comments/%d".formatted(postId, id))
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostCommentController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 댓글이 삭제되었습니다.".formatted(id)));
+
+        // 글의 댓글 목록에서 빠졌는지
+        Post post = postService.findById(postId).get();
+        assertThat(post.findCommentById(id)).isEmpty();
+
+        // DB에서도 지워졌는지: JPQL 실행 전에 미뤄 둔 DELETE(orphanRemoval)가 먼저 실행된다
+        // 다른 댓글은 그대로이므로 5건 → 4건
+        long commentCount = em
+                .createQuery("select count(pc) from PostComment pc", Long.class)
+                .getSingleResult();
+        assertThat(commentCount).isEqualTo(4);
     }
 }

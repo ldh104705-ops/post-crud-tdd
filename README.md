@@ -209,3 +209,11 @@
 - 작업: PostService.modifyComment, `PUT /api/v1/posts/{postId}/comments/{id}`(PostCommentModifyReqBody, @Valid) → `RsData<Void>` `200-1`
 - 이유: 022 테스트 통과
 - 결과: **통과(초록)**. 서버에서 1번 댓글 수정 후 조회 시 내용이 바뀌고 modifyDate 갱신
+
+### 024 댓글 삭제, 테스트 먼저 작성 (실패)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/024)
+- 강의: 14172 55강, lab2 브랜치(DB 반영 확인)
+- 작업: 댓글 삭제 테스트(t6: `DELETE /api/v1/posts/1/comments/1` → 200, `200-1`, 글의 댓글 목록과 DB에서 사라지고 댓글 5건 → 4건)
+- 이유: TDD. 응답뿐 아니라 orphanRemoval로 실제 DELETE가 실행되는지까지 테스트로 먼저 정함
+- 결과: **실패(빨강)**. 댓글 삭제 실패(DELETE를 처리할 메서드 없음), 기존 14개 통과
