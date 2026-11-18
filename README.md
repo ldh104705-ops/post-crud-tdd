@@ -153,3 +153,11 @@
 - 작업: ApiV1PostCommentControllerTest에 댓글 다건조회 테스트(t1: 1번 글의 댓글 3개, 각 댓글의 모든 필드). 컴파일되도록 기능 없는 ApiV1PostCommentController(`/api/v1/posts/{postId}/comments`)
 - 이유: TDD. 댓글은 글에 딸린 자원이라 주소도 글 아래에 두고, 응답은 댓글 배열이어야 한다는 것을 테스트로 먼저 정함
 - 결과: **실패(빨강)**. 댓글 다건조회 실패, 기존 9개 통과
+
+### 017 댓글 다건조회, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/017)
+- 강의: 14172 10강
+- 작업: 응답용 PostCommentDto(record, 글 필드 없음), `GET /api/v1/posts/{postId}/comments` → 글의 댓글 목록을 PostCommentDto 배열로 응답
+- 이유: 016 테스트 통과. 댓글 리포지터리 없이 글을 통해 댓글을 읽음
+- 결과: **통과(초록)**. 서버에서 1번 글 댓글 3개, 3번 글은 빈 배열 확인
