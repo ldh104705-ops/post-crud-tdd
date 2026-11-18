@@ -2,6 +2,7 @@ package com.back.domain.post.post.controller;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import jakarta.persistence.EntityManager;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,6 +36,9 @@ public class ApiV1PostControllerTest {
     private MockMvc mvc;
     @Autowired
     private PostService postService;
+    // 엔티티를 직접 조회할 때 쓰는 JPA 핵심 객체 (댓글 리포지터리가 없어서 댓글 수를 셀 때 사용)
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("글 다건조회")
@@ -208,5 +213,34 @@ public class ApiV1PostControllerTest {
         Post post = postService.findById(id).get();
         assertThat(post.getTitle()).isEqualTo("제목 new");
         assertThat(post.getContent()).isEqualTo("내용 new");
+    }
+
+    @Test
+    @DisplayName("글 삭제")
+    void t7() throws Exception {
+        int id = 1;
+
+        ResultActions resultActions = mvc
+                .perform(
+                        delete("/api/v1/posts/" + id)
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 글이 삭제되었습니다.".formatted(id)));
+
+        // DB에서 실제로 지워졌는지 (강의 lab2 방식)
+        assertThat(postService.findById(id)).isEmpty();
+
+        // 1번 글의 댓글 3건도 cascade REMOVE로 함께 지워져서 댓글은 5건 → 2건
+        // JPQL: 테이블이 아니라 엔티티(PostComment) 기준 쿼리. 실행 전에 미뤄 둔 DELETE가 먼저 실행된다
+        long commentCount = em
+                .createQuery("select count(pc) from PostComment pc", Long.class)
+                .getSingleResult();
+        assertThat(commentCount).isEqualTo(2);
     }
 }
