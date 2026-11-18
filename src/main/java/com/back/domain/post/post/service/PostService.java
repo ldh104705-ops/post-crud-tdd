@@ -50,6 +50,11 @@ public class PostService {
         return post.addComment(content);
     }
 
+    // 댓글 수정 (더티 체킹으로 UPDATE)
+    public void modifyComment(PostComment postComment, String content) {
+        postComment.modify(content);
+    }
+
     // 지금까지 모아 둔 변경(INSERT 등)을 DB에 바로 보낸다. 커밋은 아니다 (강의 56강)
     public void flush() {
         postRepository.flush();

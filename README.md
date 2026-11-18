@@ -201,3 +201,11 @@
 - 작업: 댓글 수정 테스트(t5: `PUT /api/v1/posts/1/comments/1` → 200, `200-1`, DB의 댓글 내용이 바뀌었는지 확인)
 - 이유: TDD. 수정 응답과 실제 DB 반영을 테스트로 먼저 정함
 - 결과: **실패(빨강)**. 댓글 수정 실패(PUT을 처리할 메서드 없음), 기존 13개 통과
+
+### 023 댓글 수정, 구현 (통과)
+- 날짜: 2026-11-18
+- [링크](https://github.com/ldh104705-ops/post-crud-tdd/tree/023)
+- 강의: 14172 32강
+- 작업: PostService.modifyComment, `PUT /api/v1/posts/{postId}/comments/{id}`(PostCommentModifyReqBody, @Valid) → `RsData<Void>` `200-1`
+- 이유: 022 테스트 통과
+- 결과: **통과(초록)**. 서버에서 1번 댓글 수정 후 조회 시 내용이 바뀌고 modifyDate 갱신

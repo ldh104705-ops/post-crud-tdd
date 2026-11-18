@@ -82,4 +82,31 @@ public class ApiV1PostCommentController {
                 new PostCommentDto(postComment)
         );
     }
+
+    record PostCommentModifyReqBody(
+            @NotBlank
+            @Size(min = 2, max = 100)
+            String content
+    ) {
+    }
+
+    // 댓글 수정: PUT /api/v1/posts/{postId}/comments/{id} (강의 32강)
+    @PutMapping("/{id}")
+    @Transactional
+    public RsData<Void> modify(
+            @PathVariable int postId,
+            @PathVariable int id,
+            @RequestBody @Valid PostCommentModifyReqBody reqBody
+    ) {
+        Post post = postService.findById(postId).get();
+
+        PostComment postComment = post.findCommentById(id).get();
+
+        postService.modifyComment(postComment, reqBody.content());
+
+        return new RsData<>(
+                "200-1",
+                "%d번 댓글이 수정되었습니다.".formatted(id)
+        );
+    }
 }
